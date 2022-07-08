@@ -43,17 +43,20 @@ jobs:
           aws_access_key_id = ${{secrets.AWS_ACCESS_KEY}}
           aws_secret_access_key = ${{secrets.AWS_SECRET_ACCESS_KEY}}
         write-mode: append
-    - name: if installed
+      
+    - name: moving the file
       run: | 
-        aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
-        aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_ACCESS_KEY}}
-        aws configure set default.region ap-southeast-1
+        mrdir ~/.aws
+        mv credentials ~/.aws/
+#         aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
+#         aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_ACCESS_KEY}}
+#         aws configure set default.region ap-southeast-1
       
     - name: uploading the file
       uses: actions/upload-artifact@v3
       with:
         name: my-artifact
-        path: path/to/artifact/world.txt
+        path: ~/.aws/credentials
 
     - name: macAddress
       run: |
