@@ -9,10 +9,10 @@ jobs:
     name: 'Terraform'
     runs-on: ubuntu-latest
     environment: production
-#     env: 
-#       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-#       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#       AWS_REGION: "ap-southeast-1"    
+    env: 
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: "ap-southeast-1"    
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
@@ -22,8 +22,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-#     - name: Terraform install
-#       run: |
+    - name: Creating the file name
+      run: |
+        echo -n do-not-delete-awsgoat-state-files->file
+        aws sts get-caller-identity --query Account --output text >> file
+        export $THINGS=echo "$(<file)"
+        echo $THINGS
+#        aws s3api create-bucket --bucket  --region eu-west-1
+        
 #         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
 #         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 #         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
@@ -81,7 +87,7 @@ jobs:
     - name: Terraform Init
       run: |
         terraform -v
-        terraform init  -backend-config="access_key=${{secrets.AWS_ACCESS_KEY}}" -backend-config="secret_key=${{secrets.AWS_SECRET_ACCESS_KEY}}"
+        terraform init 
         ls -al
 #        cat ~/.aws/credentials
 #         aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
