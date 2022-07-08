@@ -28,6 +28,7 @@ jobs:
         aws sts get-caller-identity --query Account --output text >> file
         export $(cat file) 
         echo $THINGS
+        aws s3api create-bucket --bucket $THINGS --region eu-west-1
       continue-on-error: true
     
 #     - name: checking if bucket existe
@@ -93,7 +94,6 @@ jobs:
         terraform {
           backend "s3" {
             region = "us-west-2"
-            bucket = $THINGS
             key = "terraform.tfstate"
           }
         }
@@ -103,7 +103,7 @@ jobs:
     - name: Terraform Init
       run: |
         terraform -v
-        terraform init 
+        terraform init -backend-config="bucket=$THINGS"
         ls -al
 #        cat ~/.aws/credentials
 #         aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
