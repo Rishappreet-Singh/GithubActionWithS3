@@ -1,0 +1,106 @@
+name: 'Resources'
+
+on: [workflow_dispatch]
+
+# permissions: read-all
+permissions: write-all
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+    env: 
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: "ap-southeast-1"    
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+#     Checkout the repository to the GitHub Actions runner
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+#     - name: Terraform install
+#       run: |
+#         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+#         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+#         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+#         sudo apt-get update && sudo apt-get install terraform
+#         terraform -help
+
+#         ls -al
+#         terraform -version          
+#         terraform init
+
+#     - name: Write to aws
+#       uses: DamianReeves/write-file-action@v1.0
+#       with:
+#         path: credentials
+#         contents: |
+#           [default] 
+#           aws_access_key_id = ${{secrets.AWS_ACCESS_KEY}}
+#           aws_secret_access_key = ${{secrets.AWS_SECRET_ACCESS_KEY}}
+#         write-mode: append
+#    - name: if installed
+#      run: | 
+#        aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
+#        aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_ACCESS_KEY}}
+#        aws configure set default.region ap-southeast-1
+    
+#         export AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY}}
+#         export AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}}
+#         export AWS_DEFAULT_REGION="ap-southeast-1"
+#         echo $AWS_ACCESS_KEY_ID
+#         echo $AWS_SECRET_ACCESS_KEY
+#         echo $AWS_DEFAULT_REGION
+
+        
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: |
+        terraform init
+        ls
+#        cat ~/.aws/credentials
+#         aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
+#         aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_ACCESS_KEY}}
+#         aws configure set default.region ap-southeast-1
+    
+        
+#     - name: commands
+#       run: cat README.md
+    # Generates an execution plan for Terraform
+    - name: Terraform Plan
+      run: | 
+        terraform plan -input=false
+        ls -al
+      continue-on-error: true
+      
+    - name: Terraform Plan Status
+      if: steps.plan.outcome == 'failure'
+      run: "exit 1"
+    
+      # On push to "main", build or change infrastructure according to Terraform configuration files
+      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+    - name: Terraform Apply
+      run: | 
+        terraform apply -auto-approve -input=false
+        ls -al
+      continue-on-error: true
+
+#     - name: upload file
+#       run: |
+#         git config --list --show-origin 
+#         git config user.name ${{secrets.USER}}
+#         git config user.email ${{secrets.EMAIL_ID}}
+#     - name: add
+#       run: git add terraform.tfstate
+#     - name: commit file
+#       id: commit
+#       run: git commit -m "Adding files"
+#       continue-on-error: true      
+#     - name: push file
+#       if: steps.commit.outcome == 'success'
+#       run: git push origin main
