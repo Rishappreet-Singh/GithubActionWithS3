@@ -99,7 +99,7 @@ jobs:
             key = "terraform.tfstate"
             bucket = "
         EOF
-        cat file >> conf.tf
+        cat -n temp >> conf.tf
         echo -n \" >>conf.tf
         echo } >>conf.tf
         echo } >>conf.tf
