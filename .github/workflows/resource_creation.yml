@@ -34,15 +34,15 @@ jobs:
 #         terraform -version          
 #         terraform init
 
-    - name: Write to aws
-      uses: DamianReeves/write-file-action@v1.0
-      with:
-        path: credentials
-        contents: |
-          [default] 
-          aws_access_key_id = ${{secrets.AWS_ACCESS_KEY}}
-          aws_secret_access_key = ${{secrets.AWS_SECRET_ACCESS_KEY}}
-        write-mode: append
+#     - name: Write to aws
+#       uses: DamianReeves/write-file-action@v1.0
+#       with:
+#         path: credentials
+#         contents: |
+#           [default] 
+#           aws_access_key_id = ${{secrets.AWS_ACCESS_KEY}}
+#           aws_secret_access_key = ${{secrets.AWS_SECRET_ACCESS_KEY}}
+#         write-mode: append
       
 #     - name: moving the file
 #       run: | 
@@ -52,17 +52,17 @@ jobs:
 # #        aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_ACCESS_KEY}}
 # #        aws configure set default.region ap-southeast-1
       
-    - name: uploading the file
-      uses: actions/upload-artifact@v3
-      with:
-        name: cred
-        path: credentials
-
-#     - name: download creds
-#       uses: actions/download-artifact@v3
+#     - name: uploading the file
+#       uses: actions/upload-artifact@v3
 #       with:
 #         name: cred
-#         path: ~/.aws/credentials
+#         path: credentials
+    - run: mkdir ~/.aws
+    - name: download creds
+      uses: actions/download-artifact@v3
+      with:
+        name: cred
+        path: ~/.aws/
 
     - name: macAddress and ls
       run: |
