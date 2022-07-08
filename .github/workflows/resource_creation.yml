@@ -24,9 +24,9 @@ jobs:
 
     - name: Creating the file name
       run: |
-        echo -n do-not-delete-awsgoat-state-files->file
+        echo -n THINGS=do-not-delete-awsgoat-state-files->file
         aws sts get-caller-identity --query Account --output text >> file
-        export $THINGS=| echo "$(<file)"
+        export $(cat file) 
         echo $THINGS
 #        aws s3api create-bucket --bucket  --region eu-west-1
         
