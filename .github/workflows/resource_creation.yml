@@ -27,10 +27,10 @@ jobs:
         echo -n THINGS=do-not-delete-awsgoat-state-files->file
         echo -n bucket=\"do-not-delete-awsgoat-state-files->temp
         aws sts get-caller-identity --query Account --output text >> file
-        aws sts get-caller-identity --query Account --output text >> temp
+        echo -n aws sts get-caller-identity --query Account --output text >> temp
         export $(cat file) 
         echo $THINGS
-        echo -n \" >> temp
+        echo \" >> temp
         cat temp
         aws s3api create-bucket --bucket $THINGS --region eu-west-1
       continue-on-error: true
