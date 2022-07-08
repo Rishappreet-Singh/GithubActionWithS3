@@ -57,6 +57,11 @@ jobs:
 #       with:
 #         name: my-artifact
 #         path: ~/.aws/credentials
+    - name: download creds
+      uses: actions/download-artifact@v3
+      with:
+        name: my-artifact
+        path: ~/.aws/credentials
 
     - name: macAddress
       run: |
