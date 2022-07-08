@@ -27,7 +27,7 @@ jobs:
         echo -n THINGS=do-not-delete-awsgoat-state-files->file
         echo -n bucket=\"do-not-delete-awsgoat-state-files->temp
         aws sts get-caller-identity --query Account --output text >> file
-        echo -n aws sts get-caller-identity --query Account --output text >> temp
+        aws sts get-caller-identity --query Account --output -n text >> temp
         export $(cat file) 
         echo $THINGS
         echo \" >> temp
