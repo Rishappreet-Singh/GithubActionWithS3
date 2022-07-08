@@ -100,7 +100,7 @@ jobs:
             bucket = "
         EOF
         cat file >> conf.tf
-        echo -n " >>conf.tf
+        echo -n \" >>conf.tf
         echo } >>conf.tf
         echo } >>conf.tf
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
