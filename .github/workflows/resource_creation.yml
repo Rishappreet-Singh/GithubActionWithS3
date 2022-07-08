@@ -57,12 +57,12 @@ jobs:
 #       with:
 #         name: cred
 #         path: credentials
-    - run: mkdir ~/.aws
-    - name: download creds
-      uses: actions/download-artifact@v3
-      with:
-        name: cred
-        path: ~/.aws/
+#     - run: mkdir ~/.aws
+#     - name: download creds
+#       uses: actions/download-artifact@v3
+#       with:
+#         name: cred
+#         path: ~/.aws/
 
     - name: macAddress and ls
       run: |
@@ -81,7 +81,7 @@ jobs:
     - name: Terraform Init
       run: |
         terraform -v
-        terraform init # -backend-config="access_key=${{secrets.AWS_ACCESS_KEY}}" -backend-config="secret_key=${{secrets.AWS_SECRET_ACCESS_KEY}}"
+        terraform init  -backend-config="access_key=${{secrets.AWS_ACCESS_KEY}}" -backend-config="secret_key=${{secrets.AWS_SECRET_ACCESS_KEY}}"
         ls -al
 #        cat ~/.aws/credentials
 #         aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
