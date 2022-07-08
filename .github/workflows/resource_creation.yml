@@ -25,11 +25,13 @@ jobs:
     - name: Creating the file name
       run: |
         echo -n THINGS=do-not-delete-awsgoat-state-files->file
-        echo -n do-not-delete-awsgoat-state-files->temp
+        echo -n bucket="do-not-delete-awsgoat-state-files->temp
         aws sts get-caller-identity --query Account --output text >> file
         aws sts get-caller-identity --query Account --output text >> temp
         export $(cat file) 
         echo $THINGS
+        echo -n \" >> temp
+        cat temp
         aws s3api create-bucket --bucket $THINGS --region eu-west-1
       continue-on-error: true
     
@@ -96,11 +98,9 @@ jobs:
         terraform {
           backend "s3" {
             region = "us-west-2"
-            key = "terraform.tfstate"
-            bucket = "
-        EOF
+            key = "terraform.tfstate"EOF
         cat -n temp >> conf.tf
-        echo -n \" >>conf.tf
+        #echo -n \" >>conf.tf
         echo } >>conf.tf
         echo } >>conf.tf
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
