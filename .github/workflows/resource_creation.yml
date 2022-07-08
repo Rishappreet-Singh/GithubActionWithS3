@@ -99,7 +99,7 @@ jobs:
           backend "s3" {
             region = "us-west-2"
             key = "terraform.tfstate"
-            EOF
+        EOF
         cat -n temp >> conf.tf
         #echo -n \" >>conf.tf
         echo } >>conf.tf
