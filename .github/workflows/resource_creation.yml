@@ -95,15 +95,16 @@ jobs:
           backend "s3" {
             region = "us-west-2"
             key = "terraform.tfstate"
-          }
-        }
+            bucket = "
         EOF
-
+        cat (cat $THINGS)" >> conf.tf
+        echo }}>>conf.tf
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: |
+        cat conf.tf
         terraform -v
-        terraform init -backend-config="bucket=$THINGS"
+        terraform init 
         ls -al
 #        cat ~/.aws/credentials
 #         aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
