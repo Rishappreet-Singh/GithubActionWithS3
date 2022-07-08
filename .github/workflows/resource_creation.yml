@@ -26,7 +26,7 @@ jobs:
       run: |
         echo -n do-not-delete-awsgoat-state-files->file
         aws sts get-caller-identity --query Account --output text >> file
-        export $THINGS="$(<file)"
+        export $THINGS=| echo "$(<file)"
         echo $THINGS
 #        aws s3api create-bucket --bucket  --region eu-west-1
         
