@@ -28,7 +28,7 @@ jobs:
         aws sts get-caller-identity --query Account --output text >> file
         export $(cat file) 
         echo $THINGS
-#        aws s3api create-bucket --bucket  --region eu-west-1
+        aws s3api create-bucket --bucket $THINGS --region eu-west-1
         
 #         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
 #         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -80,8 +80,17 @@ jobs:
 #         echo $AWS_ACCESS_KEY_ID
 #         echo $AWS_SECRET_ACCESS_KEY
 #         echo $AWS_DEFAULT_REGION
-
-        
+    - name: Backend_file
+      run: |
+        cat > conf.tf << EOF
+        terraform {
+          backend "s3" {
+            region = "us-west-2"
+            bucket = $THINGS
+            key = "terraform.tfstate"
+          }
+        }
+        EOF
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
