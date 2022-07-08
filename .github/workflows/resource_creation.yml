@@ -30,8 +30,9 @@ jobs:
         aws sts get-caller-identity --query Account --output -n text >> temp
         export $(cat file) 
         echo $THINGS
+        cat temp
         echo \" >> temp1
-        sed -i.bck 'temp1' temp
+        #sed -i.bck 'temp1' temp
         cat temp
         aws s3api create-bucket --bucket $THINGS --region eu-west-1
       continue-on-error: true
@@ -101,7 +102,7 @@ jobs:
             region = "us-west-2"
             key = "terraform.tfstate"
         EOF
-        cat -n temp >> conf.tf
+        cat temp >> conf.tf
         #echo -n \" >>conf.tf
         echo } >>conf.tf
         echo } >>conf.tf
