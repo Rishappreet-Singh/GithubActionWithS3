@@ -28,11 +28,14 @@ jobs:
         aws sts get-caller-identity --query Account --output text >> file
         export $(cat file) 
         echo $THINGS
+      continue-on-error: true
     
-    - name: checking if bucket existe
-      if: aws s3 ls $THINGS 2>&1 | grep -q 'NoSuchBucket'
-      run: aws s3api create-bucket --bucket $THINGS --region eu-west-1
- 
+#     - name: checking if bucket existe
+#       id : ok
+#       run : aws s3 ls $THINGS 2>&1 | grep -q 'NoSuchBucket'  
+#       run: aws s3api create-bucket --bucket $THINGS --region eu-west-1
+#     - name : ok ouput
+      
         
 #         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
 #         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
