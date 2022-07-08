@@ -2,13 +2,13 @@ provider "aws" {
     region = "us-west-2"
 }
 
-terraform {
-  backend "s3" {
-    region = "us-west-2"
-    bucket = "do-not-delete-awsgoat-state-files-479026564651"
-    key = "terraform.tfstate"
-  }
-}
+# terraform {
+#   backend "s3" {
+#     region = "us-west-2"
+#     bucket = "do-not-delete-awsgoat-state-files-479026564651"
+#     key = "terraform.tfstate"
+#   }
+# }
 
 # first tast creating a lambda function returing hello world
 resource "aws_iam_role" "iam_for_lambda" {
