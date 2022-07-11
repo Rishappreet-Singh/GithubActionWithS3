@@ -1,8 +1,7 @@
 name: 'Resources'
 
-# on: [workflow_dispatch]
-on: [push]
-# permissions: read-all
+on: [workflow_dispatch]
+
 permissions: write-all
 jobs:
   terraform:
@@ -13,11 +12,9 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: "ap-southeast-1"    
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
-#     Checkout the repository to the GitHub Actions runner
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -29,74 +26,10 @@ jobs:
         aws sts get-caller-identity --query Account --output text >> file
         aws sts get-caller-identity --query Account --output text >> temp
         export $(cat file) 
-        echo $THINGS
-        cat temp
-        #tr -d "\n" < temp #delete newline
-        #awk '{ print $0"\""}' temp > temp
         sed -i.bak 's/^..*$/&"/' temp
-        #echo \" >> temp
-        #sed -i.bck 'temp1' temp
-        cat temp
         aws s3api create-bucket --bucket $THINGS --region eu-west-1
       continue-on-error: true
     
-#     - name: checking if bucket existe
-#       id : ok
-#       run : aws s3 ls $THINGS 2>&1 | grep -q 'NoSuchBucket'  
-#       run: aws s3api create-bucket --bucket $THINGS --region eu-west-1
-#     - name : ok ouput
-      
-        
-#         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-#         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-#         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-#         sudo apt-get update && sudo apt-get install terraform
-#         terraform -help
-
-#         ls -al
-#         terraform -version          
-#         terraform init
-
-#     - name: Write to aws
-#       uses: DamianReeves/write-file-action@v1.0
-#       with:
-#         path: credentials
-#         contents: |
-#           [default] 
-#           aws_access_key_id = ${{secrets.AWS_ACCESS_KEY}}
-#           aws_secret_access_key = ${{secrets.AWS_SECRET_ACCESS_KEY}}
-#         write-mode: append
-      
-#     - name: moving the file
-#       run: | 
-#         mkdir ~/.aws
-#         mv credentials ~/.aws/
-# #        aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
-# #        aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_ACCESS_KEY}}
-# #        aws configure set default.region ap-southeast-1
-      
-#     - name: uploading the file
-#       uses: actions/upload-artifact@v3
-#       with:
-#         name: cred
-#         path: credentials
-#     - run: mkdir ~/.aws
-#     - name: download creds
-#       uses: actions/download-artifact@v3
-#       with:
-#         name: cred
-#         path: ~/.aws/
-
-    - name: macAddress and ls
-      run: |
-        ifconfig -a
-        ls -R
-#         export AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY}}
-#         export AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}}
-#         export AWS_DEFAULT_REGION="ap-southeast-1"
-#         echo $AWS_ACCESS_KEY_ID
-#         echo $AWS_SECRET_ACCESS_KEY
-#         echo $AWS_DEFAULT_REGION
     - name: Backend_file
       run: |
         cat > conf.tf << EOF
@@ -109,51 +42,20 @@ jobs:
         #echo -n \" >>conf.tf
         echo } >>conf.tf
         echo } >>conf.tf
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+
     - name: Terraform Init
       run: |
-        cat conf.tf
-        terraform -v
         terraform init 
         ls -al
-#        cat ~/.aws/credentials
-#         aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY}}
-#         aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_ACCESS_KEY}}
-#         aws configure set default.region ap-southeast-1
     
-        
-#     - name: commands
-#       run: cat README.md
-    # Generates an execution plan for Terraform
     - name: Terraform Plan
       run: | 
         terraform plan -input=false
-        ls -al
       continue-on-error: true
       
     - name: Terraform Plan Status
       if: steps.plan.outcome == 'failure'
       run: "exit 1"
     
-      # On push to "main", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
     - name: Terraform Apply
-      run: | 
-        terraform apply -auto-approve -input=false
-        ls -al
-      continue-on-error: true
-
-#     - name: upload file
-#       run: |
-#         git config --list --show-origin 
-#         git config user.name ${{secrets.USER}}
-#         git config user.email ${{secrets.EMAIL_ID}}
-#     - name: add
-#       run: git add terraform.tfstate
-#     - name: commit file
-#       id: commit
-#       run: git commit -m "Adding files"
-#       continue-on-error: true      
-#     - name: push file
-#       if: steps.commit.outcome == 'success'
-#       run: git push origin main
+      run: terraform apply -auto-approve -input=false
