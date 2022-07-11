@@ -32,7 +32,7 @@ jobs:
         echo $THINGS
         cat temp
         #tr -d "\n" < temp #delete newline
-        echo \" >> temp
+        #echo \" >> temp
         #sed -i.bck 'temp1' temp
         cat temp
         aws s3api create-bucket --bucket $THINGS --region eu-west-1
