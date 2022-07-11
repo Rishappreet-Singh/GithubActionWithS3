@@ -32,7 +32,7 @@ jobs:
         echo $THINGS
         cat temp
         #tr -d "\n" < temp #delete newline
-        awk '{ print $0"\""}' temp
+        awk '{ print $0"\""}' temp > temp
         #echo \" >> temp
         #sed -i.bck 'temp1' temp
         cat temp
