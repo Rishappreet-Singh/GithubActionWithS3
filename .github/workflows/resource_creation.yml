@@ -31,7 +31,7 @@ jobs:
         export $(cat file) 
         echo $THINGS
         cat temp
-        tr -d "\n" < temp #delete newline
+        #tr -d "\n" < temp #delete newline
         echo \" >> temp
         #sed -i.bck 'temp1' temp
         cat temp
