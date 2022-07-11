@@ -39,18 +39,14 @@ jobs:
             key = "terraform.tfstate"
         EOF
         cat temp >> conf.tf
-        #echo -n \" >>conf.tf
         echo } >>conf.tf
         echo } >>conf.tf
 
     - name: Terraform Init
-      run: |
-        terraform init 
-        ls -al
+      run: terraform init 
     
     - name: Terraform Plan
-      run: | 
-        terraform plan -input=false
+      run: terraform plan -input=false
       continue-on-error: true
       
     - name: Terraform Plan Status
