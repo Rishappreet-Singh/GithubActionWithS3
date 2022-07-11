@@ -32,7 +32,8 @@ jobs:
         echo $THINGS
         cat temp
         #tr -d "\n" < temp #delete newline
-        awk '{ print $0"\""}' temp > temp
+        #awk '{ print $0"\""}' temp > temp
+        sed -i.bak 's/^..*$/&"/' temp
         #echo \" >> temp
         #sed -i.bck 'temp1' temp
         cat temp
